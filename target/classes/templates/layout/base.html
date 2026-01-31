@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(content)">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice System</title>
+
+    <!-- ✅ BOOTSTRAP CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- ✅ SELECT2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+          rel="stylesheet">
+
+    <!-- ✅ PRINT STYLES -->
+    <style>
+        @media print {
+            aside, .btn, .sidebar, .no-print {
+                display: none !important;
+            }
+            body {
+                background: #fff !important;
+            }
+            main {
+                padding: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<nav class="navbar navbar-light bg-white shadow-sm px-4">
+    <a class="navbar-brand fw-bold text-primary"
+       th:href="@{/}">
+        🧾 Inventory Mangement
+    </a>
+</nav>
+
+<div class="d-flex min-vh-100">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar"
+           th:replace="layout/sidebar :: sidebar"></aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="flex-grow-1 p-4 bg-light">
+
+        <!-- 🔥 CONTENT INJECTION POINT -->
+        <section th:replace="${content}"></section>
+
+    </main>
+
+</div>
+
+<!-- ================= JS ================= -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+6

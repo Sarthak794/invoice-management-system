@@ -1,0 +1,28 @@
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+h1 {
+    font-weight: 700;
+}
+.invoice-status {
+    padding: 6px 12px;      /* height ↑, width controlled */
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 999px;   /* pill shape */
+    letter-spacing: 0.5px;
+    display: inline-block;
+    min-width: 70px;
+    text-align: center;
+}
+.card {
+    border-radius: 10px;
+}
+
+.table th {
+    font-weight: 600;
+}
+
+h3, h4 {
+    letter-spacing: 0.3px;
+}

@@ -1,0 +1,41 @@
+<!-- templates/customer/customer-form.html -->
+<div th:fragment="page">
+
+    <div class="container-fluid">
+
+        <h4 class="fw-bold mb-4"
+            th:text="${customer.id == null ? 'Add Customer' : 'Edit Customer'}"></h4>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <form th:action="@{/customers/save}" method="post" th:object="${customer}">
+
+                    <input type="hidden" th:field="*{id}"/>
+
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" th:field="*{name}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" th:field="*{email}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="text" class="form-control" th:field="*{phone}">
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-sm">Save</button>
+                    <a th:href="@{/customers}" class="btn btn-outline-secondary btn-sm">Cancel</a>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

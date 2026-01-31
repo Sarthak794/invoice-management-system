@@ -1,0 +1,54 @@
+.sidebar {
+    min-height: 100vh;
+    background-color: #212529;
+}
+
+.sidebar .nav-link {
+    border-radius: 6px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #343a40;
+}
+
+main {
+    min-height: 90vh;
+}
+.invoice-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;        /* small width */
+    height: 28px;           /* slightly taller */
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    letter-spacing: 0.4px;
+}
+
+/* STATUS COLORS */
+.status-paid {
+    background-color: #198754;
+    color: #ffffff;
+}
+
+.status-partial {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-due {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+.btn-outline-success:hover {
+    background-color: #198754;
+    color: #fff;
+}
+

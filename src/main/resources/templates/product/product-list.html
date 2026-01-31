@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/base :: layout(~{::section})">
+
+<section>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Product List</h3>
+
+    <a th:href="@{/products/add}" class="btn btn-primary">
+        ➕ Add Product
+    </a>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.stock}"></td>
+            <td>
+                <a th:href="@{/products/edit/{id}(id=${product.id})}"
+                   class="btn btn-warning btn-sm">Edit</a>
+
+                <a th:href="@{/products/delete/{id}(id=${product.id})}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Delete this product?')">
+                   Delete
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+</section>
+</html>

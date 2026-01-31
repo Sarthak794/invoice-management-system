@@ -1,0 +1,46 @@
+<div th:fragment="sidebar"
+     class="p-3 border-end vh-100 bg-white">
+
+    <h6 class="text-uppercase text-muted fw-bold mb-3">Menu</h6>
+
+    <ul class="nav nav-pills flex-column gap-2">
+
+        <!-- DASHBOARD -->
+        <li class="nav-item">
+            <a th:href="@{/}" class="nav-link">
+                🏠 Dashboard
+            </a>
+        </li>
+
+        <!-- INVOICES -->
+        <li class="nav-item">
+            <a th:href="@{/invoice/list}" class="nav-link">
+                📄 Invoices
+            </a>
+        </li>
+
+        <!-- NEW INVOICE -->
+        <li class="nav-item">
+            <a th:href="@{/invoice/new}" class="nav-link">
+                ➕ New Invoice
+            </a>
+        </li>
+
+        <hr class="my-3">
+
+        <!-- CUSTOMERS -->
+        <li class="nav-item">
+            <a th:href="@{/customers}" class="nav-link">
+                👤 Customers
+            </a>
+        </li>
+
+        <!-- PRODUCTS -->
+        <li class="nav-item">
+            <a th:href="@{/products}" class="nav-link">
+                📦 Products
+            </a>
+        </li>
+
+    </ul>
+</div>

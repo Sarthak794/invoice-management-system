@@ -1,0 +1,42 @@
+<section>
+
+<h3 class="mb-4">🧾 Invoices</h3>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Invoice No</th>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="inv, i : ${invoices}">
+            <td th:text="${i.index + 1}"></td>
+            <td th:text="${inv.invoiceNumber}"></td>
+            <td th:text="${inv.invoiceDate}"></td>
+            <td th:text="${inv.customer.name}"></td>
+            <td>₹ <span th:text="${inv.grandTotal}"></span></td>
+            <td>
+                <span class="badge bg-success"
+                      th:if="${inv.status == 'PAID'}">PAID</span>
+                <span class="badge bg-warning text-dark"
+                      th:if="${inv.status == 'PARTIAL'}">PARTIAL</span>
+                <span class="badge bg-danger"
+                      th:if="${inv.status == 'DUE'}">DUE</span>
+            </td>
+            <td>
+                <a th:href="@{/invoice/view/{id}(id=${inv.id})}"
+                   class="btn btn-sm btn-primary">
+                    View
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+</section>

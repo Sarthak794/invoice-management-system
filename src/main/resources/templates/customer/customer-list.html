@@ -1,0 +1,51 @@
+<!-- templates/customer/customer-list.html -->
+<div th:fragment="page">
+
+    <div class="container-fluid">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold">Customers</h4>
+            <a th:href="@{/customers/new}" class="btn btn-primary btn-sm">
+                + Add Customer
+            </a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th class="text-center" style="width:140px;">Action</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="c : ${customers}">
+                        <td th:text="${c.name}"></td>
+                        <td th:text="${c.email}"></td>
+                        <td th:text="${c.phone}"></td>
+                        <td class="text-center">
+                            <div class="d-inline-flex gap-1">
+                                <a th:href="@{/customers/edit/{id}(id=${c.id})}"
+                                   class="btn btn-outline-primary btn-sm">✏️</a>
+
+                                <a th:href="@{/customers/delete/{id}(id=${c.id})}"
+                                   class="btn btn-outline-danger btn-sm"
+                                   onclick="return confirm('Delete this customer?');">🗑</a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

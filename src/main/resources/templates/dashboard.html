@@ -1,0 +1,48 @@
+<div class="container-fluid">
+	
+
+    <h4 class="fw-bold mb-4">Recent Invoices</h4>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between mb-3">
+                <h5 class="fw-bold mb-0">Invoices</h5>
+                <a th:href="@{/invoice/list}" class="btn btn-sm btn-outline-primary">
+                    View All
+                </a>
+            </div>
+
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th>Invoice No</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="inv : ${recentInvoices}">
+                    <td th:text="${inv.invoiceNumber}"></td>
+                    <td th:text="${inv.customer.name}"></td>
+                    <td>₹ <span th:text="${inv.grandTotal}"></span></td>
+                    <td>
+                        <span class="badge bg-success"
+                              th:if="${inv.status=='PAID'}">PAID</span>
+
+                        <span class="badge bg-warning text-dark"
+                              th:if="${inv.status=='PARTIAL'}">PARTIAL</span>
+
+                        <span class="badge bg-danger"
+                              th:if="${inv.status=='DUE'}">DUE</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>

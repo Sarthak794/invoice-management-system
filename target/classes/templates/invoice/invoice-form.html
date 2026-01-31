@@ -1,0 +1,250 @@
+<section xmlns:th="http://www.thymeleaf.org">
+
+<h3 class="mb-3">🧾 Create New Invoice</h3>
+
+<form id="invoiceForm" th:action="@{/invoice/save}" method="post">
+
+    <!-- HEADER -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label>Invoice Number</label>
+            <input class="form-control"
+                   th:value="${invoice.invoiceNumber}"
+                   readonly>
+        </div>
+
+        <div class="col-md-4">
+            <label>Invoice Date</label>
+            <input type="date"
+                   name="invoiceDate"
+                   class="form-control"
+                   th:value="${invoice.invoiceDate}">
+        </div>
+    </div>
+
+    <!-- CUSTOMER -->
+    <div class="card mb-4">
+        <div class="card-header fw-bold">Customer</div>
+        <div class="card-body">
+            <select class="form-select" name="customerId" required>
+                <option value="">-- Select Customer --</option>
+                <option th:each="c : ${customers}"
+                        th:value="${c.id}"
+                        th:text="${c.name + ' (' + c.phone + ')'}">
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ITEMS -->
+    <div class="card mb-4">
+        <div class="card-header fw-bold d-flex justify-content-between align-items-center">
+            <span>Invoice Items</span>
+            <button type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    onclick="addRow()">
+                ➕ Add Item
+            </button>
+        </div>
+
+        <div class="card-body p-0">
+            <table class="table table-bordered m-0 align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th width="30%">Product</th>
+                    <th width="10%">Price</th>
+                    <th width="8%">Stock</th>
+                    <th width="8%">Qty</th>
+                    <th width="12%">Total</th>
+                    <th width="12%">Action</th>
+                </tr>
+                </thead>
+
+                <tbody id="itemsTable">
+                <tr>
+                    <td>
+                        <select class="form-select product-select"
+                                name="productIds"
+                                required>
+                            <option value="">-- Select --</option>
+                            <option th:each="p : ${products}"
+                                    th:value="${p.id}"
+                                    th:text="${p.name + ' (Stock ' + p.stock + ')'}"
+                                    th:data-price="${p.price != null ? p.price : 0}"
+                                    th:data-stock="${p.stock != null ? p.stock : 0}"
+                                    th:disabled="${p.stock == 0}">
+                            </option>
+                        </select>
+                    </td>
+
+                    <td>
+                        <input type="number" class="form-control price" readonly>
+                    </td>
+
+                    <td>
+                        <input type="number" class="form-control stock" readonly>
+                    </td>
+
+                    <td>
+                        <input type="number"
+                               class="form-control qty"
+                               name="quantities"
+                               min="1"
+                               required>
+                    </td>
+
+                    <td>
+                        <input type="number" class="form-control total" readonly>
+                    </td>
+
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-warning edit-row">✏️</button>
+                        <button type="button" class="btn btn-sm btn-danger remove-row">✖</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="row">
+        <div class="col-md-4 offset-md-8">
+            <table class="table">
+                <tr>
+                    <th>Subtotal</th>
+                    <td>₹ <span id="subtotal">0.00</span></td>
+                </tr>
+                <tr>
+                    <th>Discount (%)</th>
+                    <td>
+                        <input id="discountPercent"
+                               name="discountPercent"
+                               class="form-control"
+                               value="0">
+                    </td>
+                </tr>
+                <tr class="fw-bold">
+                    <th>Grand Total</th>
+                    <td>₹ <span id="grandTotal">0.00</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        💾 Save Invoice
+    </button>
+
+</form>
+
+<!-- ================= JS ================= -->
+<script>
+
+/* PREVENT ENTER FORM SUBMIT */
+document.getElementById('invoiceForm')
+    .addEventListener('keydown', e => {
+        if (e.key === 'Enter') e.preventDefault();
+    });
+
+/* PRODUCT CHANGE */
+document.addEventListener('change', e => {
+    if (!e.target.classList.contains('product-select')) return;
+
+    const row = e.target.closest('tr');
+    const opt = e.target.selectedOptions[0];
+
+    row.querySelector('.price').value = opt.dataset.price || '';
+    row.querySelector('.stock').value = opt.dataset.stock || '';
+    row.querySelector('.qty').max = opt.dataset.stock || '';
+
+    calculateInvoice();
+    row.querySelector('.qty').focus();
+});
+
+/* LIVE CALC */
+document.addEventListener('input', e => {
+    if (e.target.classList.contains('qty') ||
+        e.target.id === 'discountPercent') {
+        calculateInvoice();
+    }
+});
+
+/* ENTER → ADD ROW */
+document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' || !e.target.classList.contains('qty')) return;
+
+    e.preventDefault();
+
+    const row = e.target.closest('tr');
+    const product = row.querySelector('.product-select').value;
+    const qty = parseFloat(e.target.value);
+
+    if (!product || !qty || qty <= 0) return;
+
+    const rows = document.querySelectorAll('#itemsTable tr');
+    if (row !== rows[rows.length - 1]) return;
+
+    const newRow = addRow();
+    setTimeout(() => newRow.querySelector('.product-select').focus(), 0);
+});
+
+/* REMOVE ROW */
+document.addEventListener('click', e => {
+    if (!e.target.classList.contains('remove-row')) return;
+
+    const rows = document.querySelectorAll('#itemsTable tr');
+    if (rows.length > 1) {
+        e.target.closest('tr').remove();
+        calculateInvoice();
+    }
+});
+
+/* ADD ROW */
+function addRow() {
+    const base = document.querySelector('#itemsTable tr');
+    const row = base.cloneNode(true);
+
+    row.querySelector('.product-select').selectedIndex = 0;
+    row.querySelector('.price').value = '';
+    row.querySelector('.stock').value = '';
+    row.querySelector('.qty').value = '';
+    row.querySelector('.total').value = '';
+
+    document.getElementById('itemsTable').appendChild(row);
+    return row;
+}
+
+/* TOTAL CALC */
+function calculateInvoice() {
+    let subtotal = 0;
+
+    document.querySelectorAll('#itemsTable tr').forEach(row => {
+        const product = row.querySelector('.product-select').value;
+        const price = parseFloat(row.querySelector('.price').value);
+        const qty = parseFloat(row.querySelector('.qty').value);
+
+        if (!product || isNaN(price) || isNaN(qty) || qty <= 0) {
+            row.querySelector('.total').value = '';
+            return;
+        }
+
+        const total = price * qty;
+        row.querySelector('.total').value = total.toFixed(2);
+        subtotal += total;
+    });
+
+    document.getElementById('subtotal').innerText = subtotal.toFixed(2);
+
+    const discount = parseFloat(
+        document.getElementById('discountPercent').value || 0
+    );
+
+    const grand = subtotal - (subtotal * discount / 100);
+    document.getElementById('grandTotal').innerText =
+        Math.max(grand, 0).toFixed(2);
+}
+
+</script>
+
+</section>
